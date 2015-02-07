@@ -488,6 +488,11 @@ class PythonInterface:
 		self.UpdateButton = XPCreateWidget(x+270, y-40, x+350, y-60,1, "Update", 0, self.XFSEWidget,xpWidgetClass_Button)
 		XPSetWidgetProperty(self.UpdateButton, xpProperty_ButtonType, xpPushButton)
 		XPSetWidgetProperty(self.UpdateButton, xpProperty_Enabled, 0)
+		
+		#log flight button
+		self.LogButton = XPCreateWidget(x+270, y-60, x+350, y-80,1, "Log flight", 0, self.XFSEWidget,xpWidgetClass_Button)
+		XPSetWidgetProperty(self.LogButton, xpProperty_ButtonType, xpPushButton)
+		XPSetWidgetProperty(self.LogButton, xpProperty_Enabled, 0)
 
 	#############################################################
 	## GUI (BTN) Message Handler
@@ -510,6 +515,12 @@ class PythonInterface:
 				self.cancelFlight("Flight cancelled","")
 			elif (inParam1 == self.UpdateButton):
 				self.doUpdate()
+			elif (inParam1 == self.LogButton):
+				print "[XFSE|Nfo] BTN log flight"
+				airspeed=XPLMGetDataf(XPLMFindDataRef("sim/flightmodel/position/groundspeed"))
+				if(self.isAllEngineStopped() and self.ACEngine[0].planeALT()<self.endPlaneAlt and airspeed<float(self.endPlaneSpd)):
+					print "[XFSE|Nfo] Aircraft (Plane or Heli) arrived"
+					self.arrive()
 			else:
 				print "[XFSE|ERR] UNKNOWN GUI button pressed"
 				
@@ -1096,6 +1107,7 @@ class PythonInterface:
 				
 				XPSetWidgetProperty(self.StartFlyButton, xpProperty_Enabled, 0)
 				XPSetWidgetProperty(self.CancelFlyButton, xpProperty_Enabled, 1)
+				XPSetWidgetProperty(self.LogButton, xpProperty_Enabled, 1)
 
 				self.Arrived=0
 				self.flightStart = int( XPLMGetDataf(XPLMFindDataRef("sim/time/total_flight_time_sec")) )
@@ -1247,6 +1259,7 @@ class PythonInterface:
 						
 					XPSetWidgetProperty(self.StartFlyButton, xpProperty_Enabled, 1)
 					XPSetWidgetProperty(self.CancelFlyButton, xpProperty_Enabled, 0)
+					XPSetWidgetProperty(self.LogButton, xpProperty_Enabled, 0)
 					self.flying=0
 					self.airborne=0
 					self.Arrived=1
@@ -1280,6 +1293,7 @@ class PythonInterface:
 			if (cancelflight.getElementsByTagName('response')[0].firstChild.nodeName=="ok"):
 				XPSetWidgetProperty(self.StartFlyButton, xpProperty_Enabled, 1)
 				XPSetWidgetProperty(self.CancelFlyButton, xpProperty_Enabled, 0)
+				XPSetWidgetProperty(self.LogButton, xpProperty_Enabled, 0)
 				self.setInfoMessage(message,
 									message2,
 									"",
