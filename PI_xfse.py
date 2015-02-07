@@ -796,10 +796,8 @@ class PythonInterface:
 			else:
 				isHeli = 0
 					  
-			if(isHeli == 0):
-				isBrake=XPLMGetDataf(XPLMFindDataRef("sim/flightmodel/controls/parkbrake"))
-			else:
-				isBrake=float(XPLMGetDatai(XPLMFindDataRef("sim/cockpit2/switches/rotor_brake")))
+			isBrake=XPLMGetDataf(XPLMFindDataRef("sim/flightmodel/controls/parkbrake"))
+
 				
 			airspeed=XPLMGetDataf(XPLMFindDataRef("sim/flightmodel/position/groundspeed"))
 
@@ -851,10 +849,7 @@ class PythonInterface:
 					if(airspeed<self.startPlaneSpd):
 						_outtxt += " SPD>"+str(self.startPlaneSpd)+"kts"
 
-					if(isHeli == 0):
-						_brk="PrkBrk"
-					else:
-						_brk="RotBrk"
+					_brk="PrkBrk"
 					if(isBrake>self.startBrakeMax):
 						_outtxt += " "+_brk+"<="+str(int(self.startBrakeMax*100))+"%"
 					if(isBrake>self.startBrakeMax and isBrake<1.0):
@@ -876,10 +871,8 @@ class PythonInterface:
 						if self.ACEngine[ienga].isEngRun() > 0:
 							_outtxt += " Eng"+str(ienga+1)
 
-					if(isHeli == 0):
-						_brk="PrkBrk"
-					else:
-						_brk="RotBrk"
+					_brk="PrkBrk"
+
 					if(isBrake!=1.0):
 						_outtxt += " "+_brk+"=100%"
 					if(isBrake>0 and isBrake<1.0):
