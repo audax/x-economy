@@ -888,7 +888,7 @@ class PythonInterface:
 				XPSetWidgetDescriptor(self.EndFlightCaption, _outtxt)
 				
 			# go airborne
-			if(isBrake<=self.startBrakeMax and self.ACEngine[0].currentRPM()>float(self.startPlaneRpm) and airspeed>float(self.startPlaneSpd) and self.ACEngine[0].planeALT()>self.startPlaneAlt):
+			if((isHeli or isBrake<=self.startBrakeMax) and self.ACEngine[0].currentRPM()>float(self.startPlaneRpm) and airspeed>float(self.startPlaneSpd) and self.ACEngine[0].planeALT()>self.startPlaneAlt):
 				self.airborne = 1
 				self.Transmitting = 0
 				# engine feed only when flying: pre-heat recommended on ground
@@ -900,7 +900,7 @@ class PythonInterface:
 			else:
 				if(self.airborne == 1):
 					if(self.flightTime>self.endFlightTime and self.isAllEngineStopped() and self.ACEngine[0].planeALT()<self.endPlaneAlt):
-						if(isBrake==1.0 and airspeed<float(self.endPlaneSpd)):
+						if((isHeli or isBrake==1.0) and airspeed<float(self.endPlaneSpd)):
 							print "[XFSE|Nfo] Aircraft (Plane or Heli) arrived"
 							self.arrive()
 
